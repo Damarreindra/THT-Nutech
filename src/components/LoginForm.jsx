@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as RiIcons from "react-icons/ri";
 import { MdAlternateEmail } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../utils/Store/AuthSlice";
 

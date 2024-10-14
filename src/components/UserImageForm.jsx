@@ -51,6 +51,11 @@ function UserImageForm({ user }) {
     });
   };
 
+  const handleClose =()=>{
+    setIsActive(false)
+    setProfilePreview(null)
+  }
+
   return (
     <div>
       <div className="flex">
@@ -66,7 +71,7 @@ function UserImageForm({ user }) {
                 : user.profile_image
             }
             alt="Profile"
-            className="border-2 border-solid rounded-full w-20"
+            className="w-16 h-16 rounded-full object-cover border"
           />
           <span className="absolute right-1 bottom-0 bg-white rounded-full border p-1 border-gray-400">
             <RiIcons.RiEdit2Line />
@@ -86,7 +91,7 @@ function UserImageForm({ user }) {
           image={profilePreview}
           isActive={isActive}
           onClick={handleProfileUpdate}
-          onClose={() => setIsActive(false)}
+          onClose={handleClose}
         />
       )}
       {

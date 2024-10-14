@@ -9,7 +9,7 @@ function ProfilePictModal({ isActive, image, onClick, onClose }) {
           <h1 className="font-semibold text-center text-xl">Pratinjau</h1>
         </div>
         <div className="flex flex-col p-8 ">
-          <img width={250} className="rounded-full border" src={image} />
+          <img className="w-60 h-60 rounded-full object-cover border" src={image}  alt="Preview"/>
           <button
             className="bg-red-500 p-3 rounded text-white mt-3 mb-3"
             onClick={onClick}

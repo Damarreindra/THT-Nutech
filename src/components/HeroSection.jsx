@@ -31,11 +31,17 @@ function HeroSection() {
             />
           </svg>
         </Link>
-        <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-        Bayar Tagihan Mudah dengan SIMS PPOB
+        <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-4xl dark:text-white">
+        Bayar Tagihan Mudah dengan 
+       
 
         </h1>
-        <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48 dark:text-gray-200">
+        <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+      
+         SIMS PPOB
+
+        </h1>
+        <p className="mb-8 text-lg font-normal text-gray-300 lg:text-xl sm:px-16 lg:px-48 dark:text-gray-300">
         SIMS PPOB adalah layanan untuk pembayaran listrik, pulsa, internet, pajak, 
           PDAM, dan masih banyak lagi. Nikmati kemudahan transaksi dalam satu platform!
         </p>
