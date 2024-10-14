@@ -13,6 +13,8 @@ function UserInfo() {
   const { user } = useSelector((state) => state.user);
   const { balance } = useSelector((state) => state.transactions);
 
+
+
   useEffect(() => {
     dispatch(fetchProfile());
   }, [dispatch]);

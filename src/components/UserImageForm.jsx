@@ -14,7 +14,18 @@ function UserImageForm({ user }) {
 
   const handleProfileChange = (e) => {
     const file = e.target.files[0];
-    if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
+
+    if (file) {
+      if (file.type !== "image/jpeg" && file.type !== "image/png") {
+        alert("Only PNG and JPEG formats are allowed.");
+        return;
+      }
+      
+      if (file.size > 100 * 1024) { 
+        alert("File size must be less than 100 KB.");
+        return;
+      }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfile(file);
@@ -22,11 +33,10 @@ function UserImageForm({ user }) {
         setIsActive(true);
       };
       reader.readAsDataURL(file);
-    }else{
+    } else {
       setProfile(null);
       setProfilePreview(null);
       setIsActive(false);
-      alert("Only PNG and JPEG formats are allowed.");
     }
   };
 

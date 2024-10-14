@@ -10,8 +10,8 @@ function UserEditForm({ user }) {
   const [editable, setEditable] = useState(false);
   const [firstName, setFirstName] = useState(user.first_name);
   const [lastName, setLastName] = useState(user.last_name);
-  const [message, setMessage] = useState("")
-  const dispatch = useDispatch()
+  const [message, setMessage] = useState("");
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -23,20 +23,23 @@ function UserEditForm({ user }) {
     dispatch(updateUser(userData)).then((result) => {
       if (result.meta.requestStatus === "fulfilled") {
         setMessage(result.payload?.message);
-        setEditable(false)
+        setEditable(false);
       } else {
         setMessage(result.payload?.message);
       }
     });
-
   };
 
   const handleEdit = () => {
     setEditable((prevState) => !prevState);
-    setFirstName(user.first_name)
-    setLastName(user.last_name)
-  }
+    setFirstName(user.first_name);
+    setLastName(user.last_name);
+  };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
 
   return (
     <div>
@@ -123,11 +126,12 @@ function UserEditForm({ user }) {
 
           <button
             type="button"
-            onClick={editable ? handleSubmit : handleEdit  }
-            className="w-full bg-red-600 text-white rounded p-3 hover:bg-red-900"
+            onClick={editable ? handleSubmit : handleEdit}
+            className={`w-full border border-red-500  text-red-500 rounded p-3 ${editable?"bg-red-500 text-white":"bg-white"}`}
           >
             {editable ? "Simpan" : "Edit Profil"}
           </button>
+
           {editable && (
             <button
               type={"button"}
@@ -138,12 +142,24 @@ function UserEditForm({ user }) {
             </button>
           )}
         </form>
+
+       
+        <button
+          type="button"
+          hidden={editable}
+          onClick={handleLogout}
+          className="w-full bg-red-600  text-white rounded mt-3 p-3 hover:bg-red-900"
+        >
+          Logout
+        </button>
+    
       </div>
-      {
-        message && (
-          <Alert message={"Edit profil "+ message} onClose={()=>setMessage(null)}/>
-        )
-      }
+      {message && (
+        <Alert
+          message={"Edit profil " + message}
+          onClose={() => setMessage(null)}
+        />
+      )}
     </div>
   );
 }

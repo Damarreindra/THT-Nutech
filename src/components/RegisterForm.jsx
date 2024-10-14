@@ -4,12 +4,14 @@ import * as RiIcons from "react-icons/ri";
 import { MdAlternateEmail } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { registerUser } from "../utils/Store/UserSlice";
 import Alert from "./Alert";
+import { registerUser } from "../utils/Store/AuthSlice";
 
 function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false); 
+
   const {
     register,
     handleSubmit,
@@ -39,7 +41,9 @@ function RegisterForm() {
       last_name,
       password,
     };
+    setLoading(true)
     dispatch(registerUser(userCredentials)).then((result) => {
+      setLoading(false);
       if (result.meta.requestStatus === "fulfilled") {
         setEmail("");
         setPassword("");
@@ -215,8 +219,32 @@ function RegisterForm() {
           <button
             type="submit"
             className="w-full bg-red-600 text-white rounded p-3 hover:bg-red-900"
+            disabled={loading}
           >
-            Register
+            {loading ? (
+              <svg
+                className="animate-spin h-5 w-5 text-white mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                ></path>
+              </svg>
+            ) : (
+              "Register"
+            )}
           </button>
           <p className="text-center mt-3">
             Sudah punya akun? Login{" "}

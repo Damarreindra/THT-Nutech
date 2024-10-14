@@ -3,7 +3,7 @@ import React from 'react';
 function AuthContainer({ children }) {
   return (
     <>
-      <div className="flex flex-col sm:flex-row items-center justify-center">
+      <div className="flex flex-col sm:flex-row items-center justify-center border border-gray-300 shadow rounded">
         <div className="flex-1 p-10 bg-white">
           {children}
         </div>

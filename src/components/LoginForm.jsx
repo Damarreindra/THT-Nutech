@@ -4,13 +4,14 @@ import * as RiIcons from "react-icons/ri";
 import { MdAlternateEmail } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { loginUser } from "../utils/Store/UserSlice";
+import { loginUser } from "../utils/Store/AuthSlice";
 
 function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false)
   const {
     register,
     handleSubmit,
@@ -19,16 +20,19 @@ function LoginForm() {
 
   const togglePassword = () => setShowPassword(!showPassword);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const onSubmit = () => {
+    setLoading(true)
     let userCredentials = { email, password };
     dispatch(loginUser(userCredentials)).then((result) => {
+      setLoading(false)
+
       if (result.meta.requestStatus === "fulfilled") {
         setEmail("");
         setPassword("");
-        localStorage.setItem('token', result.payload.data.token)
-        navigate("/home");
+
+        localStorage.setItem("token", result.payload.data.token);
+        window.location.href = "/home";
       } else {
         setError(result.payload?.message);
       }
@@ -37,7 +41,7 @@ function LoginForm() {
 
   return (
     <div>
-      <div className="max-w-md mx-auto">
+      <div className="max-w-md mx-auto ">
         <div className="flex justify-center items-center gap-2 mb-5">
           <img src="../images/Logo.png" alt="Logo" />
           <h1 className="font-bold text-xl">SIMS PPOB</h1>
@@ -108,15 +112,36 @@ function LoginForm() {
             )}
           </div>
           {error && (
-              <p className="text-red-500 text-sm mb-1 text-right">
-                {error}
-              </p>
-            )}
+            <p className="text-red-500 text-sm mb-1 text-right">{error}</p>
+          )}
           <button
             type="submit"
             className="w-full bg-red-600 text-white rounded p-3 hover:bg-red-900"
           >
-            Masuk
+             {loading ? (
+              <svg
+                className="animate-spin h-5 w-5 text-white mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                ></path>
+              </svg>
+            ) : (
+              "Login"
+            )}
           </button>
           <p className="text-center mt-3">
             Belum punya akun? Registrasi{" "}
