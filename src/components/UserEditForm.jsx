@@ -2,28 +2,52 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as RiIcons from "react-icons/ri";
 import { MdAlternateEmail } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { updateUser } from "../utils/Store/UpdateUserSlice";
+import Alert from "./Alert";
 
-function UserEditForm({user}) {
+function UserEditForm({ user }) {
+  const [editable, setEditable] = useState(false);
+  const [firstName, setFirstName] = useState(user.first_name);
+  const [lastName, setLastName] = useState(user.last_name);
+  const [message, setMessage] = useState("")
+  const dispatch = useDispatch()
+
   const {
     register,
-    handleSubmit,
     formState: { errors },
   } = useForm();
 
+  const handleSubmit = () => {
+    let userData = { firstName, lastName };
+    dispatch(updateUser(userData)).then((result) => {
+      if (result.meta.requestStatus === "fulfilled") {
+        setMessage(result.payload?.message);
+        setEditable(false)
+      } else {
+        setMessage(result.payload?.message);
+      }
+    });
 
-  const onSubmit = (data) => {
-    console.log(data);
   };
+
+  const handleEdit = () => {
+    setEditable((prevState) => !prevState);
+    setFirstName(user.first_name)
+    setLastName(user.last_name)
+  }
+
 
   return (
     <div>
       <div className="max-w-md mx-auto">
         <div className="flex justify-center items-center gap-2 mb-5">
-          <h1 className="font-bold text-xl">{`${user.first_name}`+" "+`${user.last_name}`}</h1>
+          <h1 className="font-bold text-xl">
+            {`${user.first_name}` + " " + `${user.last_name}`}
+          </h1>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form>
           <div className="relative w-full mb-4">
             <span className="absolute inset-y-0 left-0 flex items-center pl-3">
               <MdAlternateEmail />
@@ -38,8 +62,9 @@ function UserEditForm({user}) {
                 },
               })}
               value={user.email}
+              readOnly
               placeholder="Masukan email"
-              className={`w-full p-3 pl-10 pr-10 border ${
+              className={`w-full p-3 pl-10 pr-10 border cursor-default bg-gray-200 ${
                 errors.email ? "border-red-500" : "border-gray-300"
               } rounded`}
             />
@@ -58,9 +83,11 @@ function UserEditForm({user}) {
               {...register("nama_depan", {
                 required: "First name is required",
               })}
-              value={user.first_name}
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              readOnly={!editable}
               placeholder="Masukan nama depan"
-              className={`w-full p-3 pl-10 pr-10 border ${
+              className={`w-full p-3 pl-10 pr-10 border read-only:cursor-default read-only:bg-gray-200 ${
                 errors.nama_depan ? "border-red-500" : "border-gray-300"
               } rounded`}
             />
@@ -79,10 +106,11 @@ function UserEditForm({user}) {
               {...register("nama_belakang", {
                 required: "Last name is required",
               })}
-              value={user.last_name}
-
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              readOnly={!editable}
               placeholder="Masukan nama belakang"
-              className={`w-full p-3 pl-10 pr-10 border ${
+              className={`w-full p-3 pl-10 pr-10 border read-only:cursor-default read-only:bg-gray-200 ${
                 errors.nama_belakang ? "border-red-500" : "border-gray-300"
               } rounded`}
             />
@@ -94,13 +122,28 @@ function UserEditForm({user}) {
           </div>
 
           <button
-            type="submit"
+            type="button"
+            onClick={editable ? handleSubmit : handleEdit  }
             className="w-full bg-red-600 text-white rounded p-3 hover:bg-red-900"
           >
-            Masuk
+            {editable ? "Simpan" : "Edit Profil"}
           </button>
+          {editable && (
+            <button
+              type={"button"}
+              onClick={handleEdit}
+              className="w-full  text-gray-400 rounded p-3 mt-3"
+            >
+              Batalkan
+            </button>
+          )}
         </form>
       </div>
+      {
+        message && (
+          <Alert message={"Edit profil "+ message} onClose={()=>setMessage(null)}/>
+        )
+      }
     </div>
   );
 }

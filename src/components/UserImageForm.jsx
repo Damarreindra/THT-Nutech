@@ -1,15 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import * as RiIcons from "react-icons/ri";
+import ProfilePictModal from "./ProfilePictModal";
+import { useDispatch } from "react-redux";
+import { updateProfileImage } from "../utils/Store/UpdateUserSlice";
 
 function UserImageForm({ user }) {
-  // const [selectedImage, setSelectedImage] = useState(null);
+  const [isActive, setIsActive] = useState(false);
+  const [profile, setProfile] = useState(null);
+  const [profilePreview, setProfilePreview] = useState(null);
+  const [message, setMessage] = useState(null)
+  const dispatch = useDispatch()
 
-  // const handleImageChange = (e) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     setSelectedImage(URL.createObjectURL(file)); // Create a preview URL for the selected image
-  //   }
-  // };
+
+  const handleProfileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfile(file);
+        setProfilePreview(reader.result);
+        setIsActive(true);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+
+ 
+
+  const handleProfileUpdate=()=>{
+    
+    dispatch(updateProfileImage(profile)).then((result) => {
+      if (result.meta.requestStatus === "fulfilled") {
+        setIsActive(false)
+        setMessage(result.payload?.message);
+        
+      } else {
+        setMessage(result.payload?.message);
+      }
+    });
+  }
 
   return (
     <div>
@@ -37,10 +67,14 @@ function UserImageForm({ user }) {
             accept="image/*"
             id="profileInput"
             className="hidden"
-            //   onChange={handleProfileChange}
+            onChange={(e) => handleProfileChange(e)}
+            // onClick={()=>setIsActive(!isActive)}
           />
         </div>
       </div>
+      {profilePreview && (
+        <ProfilePictModal image={profilePreview} isActive={isActive} onClick={handleProfileUpdate} onClose={()=>setIsActive(false)}/>
+      )}
     </div>
   );
 }

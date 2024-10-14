@@ -227,7 +227,7 @@ function RegisterForm() {
         </form>
         {success && (
               <>
-                   <Alert message={success}/>
+                   <Alert message={success} onClose={()=>setSuccess(null)}/>
               </>
             )}
       </div>

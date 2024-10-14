@@ -29,7 +29,7 @@ export const registerUser = createAsyncThunk(
         try {
             const response = await axios.post(
                 `${process.env.REACT_APP_API_URL}registration`, 
-                userCredentials
+                userCredentials,
             );
             return response.data; 
         } catch (error) {
@@ -42,6 +42,7 @@ export const registerUser = createAsyncThunk(
         }
     }
 )
+
 
 export const fetchProfile = createAsyncThunk(
     'user/fetchProfile',
@@ -110,6 +111,10 @@ const userSlice = createSlice({
                 console.log('Error:', action.payload);
                 state.error = action.payload;
               })
+
+
+
+
               .addCase(fetchProfile.pending, (state) => {
                 state.loading = true;
               })

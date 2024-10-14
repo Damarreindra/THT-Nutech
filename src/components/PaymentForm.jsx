@@ -13,27 +13,27 @@ function PaymentForm({ item }) {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [success, setSuccess] = useState(false);
 
-
   const handlePayment = () => {
     dispatch(payment(item.service_code)).then((result) => {
       if (result.meta.requestStatus === "fulfilled") {
         dispatch(fetchBalance());
-        setIsConfirmOpen(false)
-        setIsAlertOpen(true)
-        setSuccess(true)
+        setIsConfirmOpen(false);
+        setIsAlertOpen(true);
+        setSuccess(true);
         setMessage(result.payload?.message);
       } else {
-        setSuccess(false)
+        setSuccess(false);
         setMessage(result.payload?.message);
+        setIsConfirmOpen(false);
       }
-      setIsAlertOpen(true)
+      setIsAlertOpen(true);
+      setIsConfirmOpen(false);
     });
   };
 
   const handleConfirm = () => {
     setIsConfirmOpen(true);
   };
-
 
   return (
     <div>
@@ -70,18 +70,16 @@ function PaymentForm({ item }) {
         />
       )}
 
-      {
-        isAlertOpen && (
-          <AlertModal
+      {isAlertOpen && (
+        <AlertModal
           isOpen={isAlertOpen}
-          onClose={()=>setIsAlertOpen(false)}
+          onClose={() => setIsAlertOpen(false)}
           amount={item.service_tariff}
           success={success}
           payment={item.service_name}
           type={"Pembayaran"}
-          />
-        )
-      }
+        />
+      )}
     </div>
   );
 }
