@@ -36,6 +36,7 @@ function UserInfo() {
                   : user.profile_image
               }
               width={100}
+              className="rounded-full border"
             />
             <h2 className="text-base sm:text-lg">Selamat Datang,</h2>
             <h1 className="font-bold text-ba sm:text-2xl">

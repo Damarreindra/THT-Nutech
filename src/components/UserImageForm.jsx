@@ -3,18 +3,18 @@ import * as RiIcons from "react-icons/ri";
 import ProfilePictModal from "./ProfilePictModal";
 import { useDispatch } from "react-redux";
 import { updateProfileImage } from "../utils/Store/UpdateUserSlice";
+import Alert from "./Alert";
 
 function UserImageForm({ user }) {
   const [isActive, setIsActive] = useState(false);
   const [profile, setProfile] = useState(null);
   const [profilePreview, setProfilePreview] = useState(null);
-  const [message, setMessage] = useState(null)
-  const dispatch = useDispatch()
-
+  const [message, setMessage] = useState(null);
+  const dispatch = useDispatch();
 
   const handleProfileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
+    if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfile(file);
@@ -22,24 +22,24 @@ function UserImageForm({ user }) {
         setIsActive(true);
       };
       reader.readAsDataURL(file);
+    }else{
+      setProfile(null);
+      setProfilePreview(null);
+      setIsActive(false);
+      alert("Only PNG and JPEG formats are allowed.");
     }
   };
 
-
- 
-
-  const handleProfileUpdate=()=>{
-    
+  const handleProfileUpdate = () => {
     dispatch(updateProfileImage(profile)).then((result) => {
       if (result.meta.requestStatus === "fulfilled") {
-        setIsActive(false)
+        setIsActive(false);
         setMessage(result.payload?.message);
-        
       } else {
         setMessage(result.payload?.message);
       }
     });
-  }
+  };
 
   return (
     <div>
@@ -64,17 +64,26 @@ function UserImageForm({ user }) {
 
           <input
             type="file"
-            accept="image/*"
+            accept=".png, .jpeg"
             id="profileInput"
             className="hidden"
             onChange={(e) => handleProfileChange(e)}
-            // onClick={()=>setIsActive(!isActive)}
           />
         </div>
       </div>
       {profilePreview && (
-        <ProfilePictModal image={profilePreview} isActive={isActive} onClick={handleProfileUpdate} onClose={()=>setIsActive(false)}/>
+        <ProfilePictModal
+          image={profilePreview}
+          isActive={isActive}
+          onClick={handleProfileUpdate}
+          onClose={() => setIsActive(false)}
+        />
       )}
+      {
+        message && (
+          <Alert message={message} onClose={()=>setMessage(null)}/>  
+        )
+      }
     </div>
   );
 }
